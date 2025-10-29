@@ -43,15 +43,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "01341ac3-3347-4083-9bf7-da81557a0f92",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "FireWeapon",
                     "type": "Button",
                     "id": "67278bbc-7754-42af-ad07-aa62ae2a63b1",
@@ -64,6 +55,24 @@
                     "name": "EquipWeapon",
                     "type": "Button",
                     "id": "3763dd11-0cce-4ecb-a798-1b5df1962d73",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DropWeapon",
+                    "type": "Button",
+                    "id": "70532366-6f7a-456a-b91c-e0de7a7563b4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold(duration=1,pressPoint=0.5)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CollectItem",
+                    "type": "Button",
+                    "id": "1332e32c-0185-46c6-9dc5-abd071ee43d9",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -183,12 +192,23 @@
                 },
                 {
                     "name": "",
-                    "id": "52b55bf5-f063-4b30-aa9b-7934c9f4c811",
+                    "id": "ae7967ea-b853-4e03-8a4a-cd3b8b9d4794",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DropWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "217f01d3-54ab-4c12-a14a-dc8d690ca4ac",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "CollectItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
