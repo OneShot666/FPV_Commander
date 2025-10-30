@@ -15,13 +15,15 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        // Convert the damage value to an integer
         int dmgAmount = Mathf.CeilToInt(damage);
         currentHealth = Mathf.Max(0, currentHealth - dmgAmount);
-        Debug.Log($"Player hurted: {currentHealth}/{maxHealth} (-dmgAmount)");
+        Debug.Log($"Player hurted: {currentHealth}/{maxHealth} (-{dmgAmount})");
     }
 
     public void Heal(float amount)
     {
+        // Convert the healing value to an integer
         int healAmount = Mathf.CeilToInt(amount);
         currentHealth = Mathf.Min(maxHealth, currentHealth + healAmount);
         Debug.Log($"Player healed: {currentHealth}/{maxHealth} (+{healAmount})");

@@ -7,15 +7,16 @@ public class DoorHandler : BaseInteractableItem
     [SerializeField] private float openAngle = 90f;
     [SerializeField] private float rotationSpeed = 3f;
 
-    private Vector3 closedEuler;
-    private Vector3 targetEuler;
+    private Vector3 closedEuler; // Original rotation of the door
+    private Vector3 targetEuler; // The rotation the door will have
     private bool isAnimating;
 
     private void Awake()
     {
         if (doorBody == null && transform.childCount > 0)
             doorBody = transform.GetChild(0);
-
+        
+        // Store the original rotation of the door 
         if (doorBody != null)
             closedEuler = doorBody.localEulerAngles;
     }
@@ -28,6 +29,8 @@ public class DoorHandler : BaseInteractableItem
     private void Update()
     {
         base.Update();
+        
+        // Make the door rotate until its reach the wanted rotation
         if (isAnimating && doorBody != null)
         {
             doorBody.localEulerAngles = Vector3.Lerp(
@@ -35,7 +38,8 @@ public class DoorHandler : BaseInteractableItem
                 targetEuler,
                 Time.deltaTime * rotationSpeed
             );
-
+            
+            // Stop the animation when the door as the wanted rotation
             if (Vector3.Distance(doorBody.localEulerAngles, targetEuler) < 0.1f)
                 isAnimating = false;
         }
