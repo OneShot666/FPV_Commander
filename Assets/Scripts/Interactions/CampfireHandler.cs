@@ -1,0 +1,53 @@
+using UnityEngine;
+
+public class CampfireHandler : BaseInteractableItem
+{
+    [Header("Campfire Settings")]
+    [SerializeField] private GameObject fireParticles;
+    [SerializeField] private GameObject smokeParticles;
+
+    private bool isActiveFire;
+    
+    private void Start()
+    {
+        base.Start();
+        
+        if (fireParticles != null)
+            fireParticles.SetActive(false);
+
+        if (smokeParticles != null)
+            smokeParticles.SetActive(false);
+    }
+
+    private void Update()
+    {
+        base.Update();
+    }
+
+    protected override void ActivateComponent()
+    {
+        isActiveFire = true;
+
+        if (fireParticles != null)
+            fireParticles.SetActive(true);
+        
+        if (smokeParticles != null)
+            smokeParticles.SetActive(true);
+
+        Debug.Log($"{name} — Feu de camp allumé");
+    }
+
+    protected override void DeactivateComponent()
+    {
+        isActiveFire = false;
+
+        if (fireParticles != null)
+            fireParticles.SetActive(false);
+        
+        if (smokeParticles != null)
+            smokeParticles.SetActive(false);
+
+
+        Debug.Log($"{name} — Feu de camp éteint");
+    }
+}
