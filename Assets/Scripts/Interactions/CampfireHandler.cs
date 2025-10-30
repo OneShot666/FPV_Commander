@@ -12,6 +12,7 @@ public class CampfireHandler : BaseInteractableItem
     {
         base.Start();
         
+        // Disable both particles effects at the start
         if (fireParticles != null)
             fireParticles.SetActive(false);
 
@@ -28,6 +29,7 @@ public class CampfireHandler : BaseInteractableItem
     {
         isActiveFire = true;
 
+        // Enable fire and smoke particle effects
         if (fireParticles != null)
             fireParticles.SetActive(true);
         
@@ -41,6 +43,7 @@ public class CampfireHandler : BaseInteractableItem
     {
         isActiveFire = false;
 
+        // Disable fire and smoke particle effects
         if (fireParticles != null)
             fireParticles.SetActive(false);
         

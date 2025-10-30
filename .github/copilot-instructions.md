@@ -2,6 +2,7 @@
 - Project name: FPV_Commander
 - Unity version: Unity 6000.0.60f1
 - Active scene:
+  - Name: InteractScene
   - Tags:
     - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController
   - Layers:

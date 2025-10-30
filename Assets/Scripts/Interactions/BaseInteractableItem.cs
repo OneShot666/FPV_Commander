@@ -16,13 +16,14 @@ public class BaseInteractableItem : MonoBehaviour
     private bool isActive;
 
     private MeshRenderer[] meshRenderers;
-    private Material[] originalMaterials;
+    private Material[] originalMaterials; // Stores the original materials
     private Material glowMaterial;
     private Transform player;
     private bool isGlowing;
 
     protected void Start()
     {
+        // Get all MeshRenderers from an object and its children
         meshRenderers = GetComponentsInChildren<MeshRenderer>();
         if (meshRenderers.Length == 0)
         {
@@ -30,12 +31,14 @@ public class BaseInteractableItem : MonoBehaviour
             return;
         }
         
+        // Save the original materials to restore them later
         originalMaterials = new Material[meshRenderers.Length];
         for (int i = 0; i < meshRenderers.Length; i++)
         {
             originalMaterials[i] = meshRenderers[i].material;
         }
         
+        // Load the glow material
         glowMaterial = Resources.Load<Material>(glowMaterialName);
         if (glowMaterial == null)
         {
@@ -43,9 +46,11 @@ public class BaseInteractableItem : MonoBehaviour
             return;
         }
         
+        // Find the player in the scene with the tag "Player"
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj) player = playerObj.transform;
         
+        // Hide UI texts at the start
         if (inactiveText != null) inactiveText.gameObject.SetActive(false);
         if (activeText != null) activeText.gameObject.SetActive(false);
     }
@@ -53,21 +58,25 @@ public class BaseInteractableItem : MonoBehaviour
     protected void Update()
     {
         if (!player || glowMaterial == null) return;
-
+        
+        // Calculate the distance between player and an object
         float distance = Vector3.Distance(player.position, transform.position);
         bool shouldGlow = distance <= highlightDistance;
-
+        
+        // Set the material glow based on the distance
         if (shouldGlow != isGlowing)
         {
             SetGlow(shouldGlow);
             isGlowing = shouldGlow;
         }
         
+        // Manage the UI text based on the distance
         HandleTextDisplay(distance <= highlightDistance);
     }
     
     private void HandleTextDisplay(bool isClose)
     {
+        // Hide all texts if the player is too far
         if (!isClose)
         {
             if (inactiveText != null) inactiveText.gameObject.SetActive(false);
@@ -75,6 +84,7 @@ public class BaseInteractableItem : MonoBehaviour
             return;
         }
         
+        // Show the correct text based on the state
         if (isActive)
         {
             if (inactiveText != null) inactiveText.gameObject.SetActive(false);
@@ -94,7 +104,8 @@ public class BaseInteractableItem : MonoBehaviour
             }
         }
     }
-
+    
+    // Set the material glow on all renderers
     protected void SetGlow(bool state)
     {
         if (meshRenderers == null) return;

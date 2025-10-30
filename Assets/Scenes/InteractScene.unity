@@ -2116,7 +2116,7 @@ PrefabInstance:
       objectReference: {fileID: 1781300130}
     - target: {fileID: 1700594681828974742, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_VersionIndex
-      value: 108
+      value: 111
       objectReference: {fileID: 0}
     - target: {fileID: 2742558178259456297, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_Mesh
@@ -2132,7 +2132,7 @@ PrefabInstance:
       objectReference: {fileID: 1085871445}
     - target: {fileID: 3574879158986541086, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_VersionIndex
-      value: 108
+      value: 111
       objectReference: {fileID: 0}
     - target: {fileID: 3939209433249346189, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2188,7 +2188,7 @@ PrefabInstance:
       objectReference: {fileID: 1576165965}
     - target: {fileID: 4266033134087652327, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_VersionIndex
-      value: 108
+      value: 111
       objectReference: {fileID: 0}
     - target: {fileID: 5469885319234324679, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_Mesh
@@ -2204,7 +2204,7 @@ PrefabInstance:
       objectReference: {fileID: 1003403824}
     - target: {fileID: 8027153313959769559, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_VersionIndex
-      value: 108
+      value: 111
       objectReference: {fileID: 0}
     - target: {fileID: 8416199825026896634, guid: 7fd3415ebf926a342844153f1ef234a3, type: 3}
       propertyPath: m_Mesh
@@ -2292,6 +2292,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 787572550684062027, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
+      propertyPath: m_text
+      value: Light the fire (E)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1729469194795530936, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
+      propertyPath: m_Name
+      value: PressEToStop
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849153678839762607, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
+      propertyPath: m_Name
+      value: PressEToLight
+      objectReference: {fileID: 0}
     - target: {fileID: 4517544235398695183, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2372,6 +2384,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4854951015212743342, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
+      propertyPath: m_text
+      value: Stop the fire (E)
+      objectReference: {fileID: 0}
     - target: {fileID: 5520042440577060674, guid: 19e96ee9852db814cbeed9fcd8bf5676, type: 3}
       propertyPath: m_Name
       value: InteractionCanvas
@@ -2427,7 +2443,7 @@ PrefabInstance:
       objectReference: {fileID: 214086159}
     - target: {fileID: 4000487848603656620, guid: d48526780f143ae428a70d673994e6ea, type: 3}
       propertyPath: m_VersionIndex
-      value: 129
+      value: 132
       objectReference: {fileID: 0}
     - target: {fileID: 4037653987888415712, guid: d48526780f143ae428a70d673994e6ea, type: 3}
       propertyPath: m_Mesh
@@ -2568,7 +2584,7 @@ PrefabInstance:
       objectReference: {fileID: 1868316334}
     - target: {fileID: 4633681931141507265, guid: a655d186df3d8c840a468f096526a4c5, type: 3}
       propertyPath: m_VersionIndex
-      value: 126
+      value: 129
       objectReference: {fileID: 0}
     - target: {fileID: 4668852452005444520, guid: a655d186df3d8c840a468f096526a4c5, type: 3}
       propertyPath: m_Mesh

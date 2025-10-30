@@ -31,6 +31,7 @@ public class PillarHandler : BaseInteractableItem
             }
         }
         
+        // Initialize all point lights to the inactive state
         if (pointLights != null && pointLights.Length > 0)
         {
             foreach (var lt in pointLights)
@@ -47,6 +48,8 @@ public class PillarHandler : BaseInteractableItem
         {
             pillarBody.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
         }
+        
+        // Smoothly change the light intensity toward its target value
         if (pointLights != null && pointLights.Length > 0)
         {
             float target = isRotating ? activeIntensity : inactiveIntensity;
@@ -62,8 +65,11 @@ public class PillarHandler : BaseInteractableItem
     protected override void ActivateComponent()
     {
         isRotating = true;
+        
         if (healingZone != null)
             healingZone.SetActive(true);
+        
+        // Set all lights to their active intensity
         if (pointLights != null && pointLights.Length > 0)
         {
             foreach (var lt in pointLights)
@@ -78,8 +84,11 @@ public class PillarHandler : BaseInteractableItem
     protected override void DeactivateComponent()
     {
         isRotating = false;
+        
         if (healingZone != null)
             healingZone.SetActive(false);
+        
+        // Set all lights to their inactive intensity
         if (pointLights != null && pointLights.Length > 0)
         {
             foreach (var lt in pointLights)

@@ -12,6 +12,7 @@ public class DamageZone : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        // Check if the object has a PlayerStats component
         PlayerStats ps = other.GetComponent<PlayerStats>();
         if (ps != null)
         {
