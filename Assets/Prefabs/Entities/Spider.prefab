@@ -78,6 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 75
+  prioritizeTargetPrefab: {fileID: 5879882954344464197, guid: a45555fd1657a8b4fb5cc7e2aedd1358, type: 3}
+  damage: 0
   detectionRange: 12
   fieldOfView: 210
   detectionHeight: 3
@@ -97,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5d1b3d7e817ab47b1f6e82ab79128d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSynchronedWalking: 1
   legs:
   - {fileID: 4523038979569298300}
   - {fileID: 1207221725059029048}
@@ -108,7 +111,6 @@ MonoBehaviour:
   - {fileID: 3745563009221910174}
   legAngle: 15
   legCycleDuration: 1.5
-  isSynchronedWalking: 1
 --- !u!1 &403939343424665711
 GameObject:
   m_ObjectHideFlags: 0

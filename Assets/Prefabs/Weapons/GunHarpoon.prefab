@@ -300,7 +300,9 @@ MonoBehaviour:
   damage: 60
   bulletPrefab: {fileID: 5292680631152627086, guid: 31b0591aa4a4dc94e8506c45b7c86945, type: 3}
   firePoint: {fileID: 4406243819462455643}
-  offset: 0.7
+  bulletOffset: 0.8
+  recoilDistance: 0.1
+  recoilDuration: 0.05
 --- !u!1 &6594376546646755891
 GameObject:
   m_ObjectHideFlags: 0
