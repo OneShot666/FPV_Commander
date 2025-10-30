@@ -1,5 +1,4 @@
 using UnityEngine;
-using Toggle;
 
 public class DoorHandler : BaseInteractableItem
 {
@@ -46,11 +45,6 @@ public class DoorHandler : BaseInteractableItem
     {
         targetEuler = closedEuler + new Vector3(0f, openAngle, 0f);
         isAnimating = true;
-        if (doorBody != null)
-        {
-            var col = doorBody.GetComponent<Collider>();
-            if (col) col.isTrigger = true;
-        }
 
         Debug.Log($"{name} — Porte ouverte");
     }
@@ -59,11 +53,6 @@ public class DoorHandler : BaseInteractableItem
     {
         targetEuler = closedEuler;
         isAnimating = true;
-        if (doorBody != null)
-        {
-            var col = doorBody.GetComponent<Collider>();
-            if (col) col.isTrigger = false;
-        }
 
         Debug.Log($"{name} — Porte fermée");
     }
