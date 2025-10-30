@@ -1,11 +1,19 @@
 using UnityEngine;
 
+// L Prioritize target feature seems to work but could be upgraded : finding target seems laggy
 namespace Enemies {
     /// <summary> Main enemy behaviour : detect and pursue player </summary>
     [RequireComponent(typeof(Rigidbody))]
     public class BaseEnemy : MonoBehaviour {
         [Header("Health settings")]
         [SerializeField] private float maxHealth = 100;
+
+        [Header("Optional prioritize target")]
+        [Tooltip("If set, the enemy will prioritize this target when within detection range")]
+        [SerializeField] private GameObject prioritizeTargetPrefab;
+
+        [Header("Attack settings")]
+        [SerializeField] private int damage;
 
         [Header("Detection settings")]
         [Tooltip("Range of sight of enemy")]
@@ -17,27 +25,32 @@ namespace Enemies {
 
         [Header("Movement settings")]
         [Tooltip("Enemy move speed")]
-        [SerializeField] private float moveSpeed = 3.5f;
+        [SerializeField] private float moveSpeed = 3f;
         [Tooltip("Min distance to stop before reaching player (attack range")]
         [SerializeField] private float stoppingDistance = 1f;
-        
+
         [Header("UI settings")]
         [SerializeField] private GameObject healthBarPrefab;
 
         [Header("Debug settings")]
         [SerializeField] private bool showGizmos = true;
 
-        private Transform _player;
         private Rigidbody _rb;
+        private Transform _player;
+        private Transform _currentTarget;
+        private GameObject _prioritizeTargetInstance;
+        private ParticleSystem _particles;
         private HealthBar _healthBar;
         private bool _isPlayerDetected;
         private float _currentHealth;
-        
+
         public bool IsPlayerDetected => _isPlayerDetected;
 
         void Start() {
             var playerObj = GameObject.FindGameObjectWithTag("Player");         // Auto-find player
             if (playerObj) _player = playerObj.transform;
+
+            FindTargetInstance();
 
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
@@ -57,15 +70,40 @@ namespace Enemies {
         void FixedUpdate() {
             if (!_player) return;                                               // Player not found
 
-            DetectPlayer();
+            DetectTarget();
 
-            if (_isPlayerDetected) MoveTowardsPlayer();
+            if (_currentTarget) MoveTowardsTarget();
             
             if (_currentHealth < maxHealth) DisplayHealthBar();
         }
 
-        private void DetectPlayer() {
+        private void FindTargetInstance() {
+            if (prioritizeTargetPrefab) {
+                string prefabName = prioritizeTargetPrefab.name;
+
+                GameObject foundInstance = GameObject.Find(prefabName);         // Try to find by name
+                if (!foundInstance) {                                           // try to find by type
+                    GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+                    foreach (var obj in allObjects)
+                        if (obj.name.Contains(prefabName)) { foundInstance = obj; break; }
+                }
+                
+                // if (GetComponent<SpiderAnimation>())                            // !!!
+                //     print($"Found {foundInstance.name} {foundInstance.transform.position}!");
+
+                if (foundInstance) {
+                    _prioritizeTargetInstance = foundInstance;
+                    _particles = foundInstance.GetComponentInChildren<ParticleSystem>();
+                }
+                // else Debug.LogWarning($"[BaseEnemy] No target '{prefabName}' found !");   // !!!
+            }
+        }
+
+        private void DetectTarget() {
             _isPlayerDetected = false;
+            _currentTarget = null;
+
+            if (IsTargetInRange()) { _currentTarget = _prioritizeTargetInstance.transform; return; }
 
             Vector3 directionToPlayer = _player.position - transform.position;
             float distance = directionToPlayer.magnitude;
@@ -77,21 +115,45 @@ namespace Enemies {
             if (angle > fieldOfView / 2f) return;
 
             _isPlayerDetected = true;
+            _currentTarget = _player;
         }
 
-        private void MoveTowardsPlayer() {
-            Vector3 dir = _player.position - transform.position;
+        // ReSharper disable Unity.PerformanceAnalysis
+        private bool IsTargetInRange() {
+            if (!_prioritizeTargetInstance) return false;
+
+            bool isActive = !(_particles && !_particles.isPlaying);
+            Vector3 direction = prioritizeTargetPrefab.transform.position - transform.position;
+            float distance = direction.magnitude;
+
+            return isActive && distance <= detectionRange && Mathf.Abs(direction.y) <= detectionHeight;
+        }
+
+        private void MoveTowardsTarget() {
+            Vector3 dir = _currentTarget.position - transform.position;
             float distance = dir.magnitude;
 
-            if (distance <= stoppingDistance) return;                           // If close enough from player
+            if (distance <= stoppingDistance) { AttackPlayer(); return; }       // If close enough from player, attack it
 
             dir.y = 0f;                                                         // Untouched : manage by gravity
             dir.Normalize();
+
             Quaternion targetRot = Quaternion.LookRotation(dir);
             _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, targetRot, Time.fixedDeltaTime * 5f));
 
-            Vector3 move = dir * (moveSpeed * Time.fixedDeltaTime);
+            float speed = prioritizeTargetPrefab && _currentTarget == prioritizeTargetPrefab.transform ?
+                moveSpeed * 1.5f : moveSpeed;                                   // Move faster if prioritize target is detected
+            Vector3 move = dir * (speed * Time.fixedDeltaTime);
             _rb.MovePosition(transform.position + move);
+        }
+
+        private void AttackPlayer() {
+            // ReSharper disable once RedundantJumpStatement
+            if (_currentTarget != _player) return;
+
+            // PlayerStat script = _player.GetComponent<PlayerStat>();          // ! Uncomment when merged
+            // script.TakeDamage(damage);
+            // ! Add timer between each attack
         }
 
         private void DisplayHealthBar() {
@@ -112,15 +174,15 @@ namespace Enemies {
             Gizmos.DrawRay(transform.position, rightBoundary * detectionRange);
         }
 
-        public void TakeDamage(float damage) {
-            _currentHealth -= damage;
+        public void TakeDamage(float receiveDamage) {
+            _currentHealth -= receiveDamage;
             _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
             if (_healthBar) _healthBar.SetHealth(_currentHealth);
             if (_currentHealth <= 0) Die();
         }
 
         private void Die() {
-            Destroy(gameObject, 1f);
+            Destroy(gameObject, 0.5f);
         }
     }
 }
