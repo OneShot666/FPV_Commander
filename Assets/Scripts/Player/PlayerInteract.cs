@@ -17,6 +17,19 @@ namespace Player {
                     Debug.DrawRay(pos, forward * interactDistance, Color.red, 1f);
                     Debug.Log("Cible détectée : " + hit.transform.name);
                     
+                    // if (hit.transform.TryGetComponent(out LighterHandler lighter))
+                    // {
+                    //     CampfireHandler campfire = hit.transform.GetComponentInParent<CampfireHandler>();
+                    //     if (campfire != null)
+                    //         lighter.LightCampfire(campfire);
+                    // }
+                    // else if (hit.transform.TryGetComponent(out WaterBucketHandler bucket))
+                    // {
+                    //     CampfireHandler campfire = hit.transform.GetComponentInParent<CampfireHandler>();
+                    //     if (campfire != null)
+                    //         bucket.PourWaterOnCampfire(campfire);
+                    // }
+                    
                     // Try to find a Toggle component and call its Switch() method
                     var toggle = hit.transform.GetComponentInChildren<BaseToggleComponent>();
                     if (toggle != null) {
