@@ -32,6 +32,8 @@ namespace Enemies {
         private HealthBar _healthBar;
         private bool _isPlayerDetected;
         private float _currentHealth;
+        
+        public bool IsPlayerDetected => _isPlayerDetected;
 
         void Start() {
             var playerObj = GameObject.FindGameObjectWithTag("Player");         // Auto-find player

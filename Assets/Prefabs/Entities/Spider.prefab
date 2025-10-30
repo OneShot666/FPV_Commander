@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5735818123518381708}
   - component: {fileID: 3215414201675380004}
   - component: {fileID: 4133500487774688098}
+  - component: {fileID: 4096759662894414825}
   m_Layer: 0
   m_Name: Spider
   m_TagString: Untagged
@@ -76,14 +77,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5b13c894c18a346b31c94a3cbbdb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  detectionRange: 15
-  fieldOfView: 360
+  maxHealth: 75
+  detectionRange: 12
+  fieldOfView: 210
   detectionHeight: 3
-  moveSpeed: 2
-  stoppingDistance: 2
+  moveSpeed: 3
+  stoppingDistance: 3
   healthBarPrefab: {fileID: 7105347332097677346, guid: b57b361716c99e94c8148ec3168590ee, type: 3}
   showGizmos: 1
+--- !u!114 &4096759662894414825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394295268899019615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce5d1b3d7e817ab47b1f6e82ab79128d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  legs:
+  - {fileID: 4523038979569298300}
+  - {fileID: 1207221725059029048}
+  - {fileID: 6151286433501338229}
+  - {fileID: 7597906195536521453}
+  - {fileID: 4595446673947755941}
+  - {fileID: 5116252106240054541}
+  - {fileID: 2235372765200142798}
+  - {fileID: 3745563009221910174}
+  legAngle: 15
+  legCycleDuration: 1.5
+  isSynchronedWalking: 1
 --- !u!1 &403939343424665711
 GameObject:
   m_ObjectHideFlags: 0
