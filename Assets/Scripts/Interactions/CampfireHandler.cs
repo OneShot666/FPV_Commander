@@ -25,7 +25,7 @@ public class CampfireHandler : BaseInteractableItem
         base.Update();
     }
 
-    protected override void ActivateComponent()
+    public override void ActivateComponent()
     {
         isActiveFire = true;
 
@@ -39,7 +39,7 @@ public class CampfireHandler : BaseInteractableItem
         Debug.Log($"{name} — Feu de camp allumé");
     }
 
-    protected override void DeactivateComponent()
+    public override void DeactivateComponent()
     {
         isActiveFire = false;
 

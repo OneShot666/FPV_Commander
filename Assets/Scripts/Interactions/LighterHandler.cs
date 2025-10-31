@@ -1,12 +1,12 @@
 using UnityEngine;
 public class LighterHandler : BaseInteractableItem
 {
-    protected override void ActivateComponent()
+    public override void ActivateComponent()
     {
         Debug.Log($"{name} — Briquet prêt");
     }
 
-    protected override void DeactivateComponent()
+    public override void DeactivateComponent()
     {
         Debug.Log($"{name} — Briquet rangé");
     }

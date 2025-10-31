@@ -45,7 +45,7 @@ public class DoorHandler : BaseInteractableItem
         }
     }
 
-    protected override void ActivateComponent()
+    public override void ActivateComponent()
     {
         targetEuler = closedEuler + new Vector3(0f, openAngle, 0f);
         isAnimating = true;
@@ -53,7 +53,7 @@ public class DoorHandler : BaseInteractableItem
         Debug.Log($"{name} — Porte ouverte");
     }
 
-    protected override void DeactivateComponent()
+    public override void DeactivateComponent()
     {
         targetEuler = closedEuler;
         isAnimating = true;

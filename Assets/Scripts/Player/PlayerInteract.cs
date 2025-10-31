@@ -1,4 +1,4 @@
-using Toggle;
+//using Toggle;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,29 +17,16 @@ namespace Player {
                     Debug.DrawRay(pos, forward * interactDistance, Color.red, 1f);
                     Debug.Log("Cible détectée : " + hit.transform.name);
                     
-                    // if (hit.transform.TryGetComponent(out LighterHandler lighter))
-                    // {
-                    //     CampfireHandler campfire = hit.transform.GetComponentInParent<CampfireHandler>();
-                    //     if (campfire != null)
-                    //         lighter.LightCampfire(campfire);
-                    // }
-                    // else if (hit.transform.TryGetComponent(out WaterBucketHandler bucket))
-                    // {
-                    //     CampfireHandler campfire = hit.transform.GetComponentInParent<CampfireHandler>();
-                    //     if (campfire != null)
-                    //         bucket.PourWaterOnCampfire(campfire);
+                    // Try to find a Toggle component and call its Switch() method
+                    // var toggle = hit.transform.GetComponentInChildren<BaseToggleComponent>();
+                    // if (toggle != null) {
+                    //     toggle.Switch();
                     // }
                     
-                    // Try to find a Toggle component and call its Switch() method
-                    var toggle = hit.transform.GetComponentInChildren<BaseToggleComponent>();
-                    if (toggle != null) {
-                        toggle.Switch();
-                    }
                     // Try to find an Interactable component and call its Switch() method
                     var interactable = hit.transform.GetComponentInParent<BaseInteractableItem>();
                     if (interactable != null) {
                         interactable.Switch();
-                        return;
                     }
                 }
             }

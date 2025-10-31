@@ -8651,7 +8651,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &814410469094752074
@@ -10003,7 +10003,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &4283983961839786137
@@ -11322,7 +11322,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &5242230679297829737
@@ -19976,7 +19976,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &8499786080983456209
@@ -20199,7 +20199,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightDistance: 3
   glowMaterialName: Glowly
+  inactiveText: {fileID: 0}
+  activeText: {fileID: 0}
+  textOffset: {x: 0, y: 2, z: 0}
   isToggleable: 1
+  isEquipped: 0
   doorBody: {fileID: 3939209433249346187}
   openAngle: 90
   rotationSpeed: 3

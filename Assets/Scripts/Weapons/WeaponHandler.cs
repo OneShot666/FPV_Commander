@@ -179,7 +179,7 @@ namespace Weapons {
 
         private void HandleDropInput() {
             if (inputHandler.DropInput) {
-                inputHandler.ResetDropInput();
+                //inputHandler.ResetDropInput(); !!
                 DropWeapon();
             }
         }

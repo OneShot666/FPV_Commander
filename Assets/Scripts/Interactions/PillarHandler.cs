@@ -61,8 +61,8 @@ public class PillarHandler : BaseInteractableItem
             }
         }
     }
-    
-    protected override void ActivateComponent()
+
+    public override void ActivateComponent()
     {
         isRotating = true;
         
@@ -81,7 +81,7 @@ public class PillarHandler : BaseInteractableItem
         Debug.Log($"{name} — Pillier activé");
     }
     
-    protected override void DeactivateComponent()
+    public override void DeactivateComponent()
     {
         isRotating = false;
         

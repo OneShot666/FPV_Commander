@@ -7,13 +7,13 @@ public class WaterBucketHandler : BaseInteractableItem
 
     private bool isCarried;
 
-    protected override void ActivateComponent()
+    public override void ActivateComponent()
     {
         isCarried = true;
-        Debug.Log($"{name} — Sceau ramassé");
+        //Debug.Log($"{name} — Sceau ramassé");
     }
 
-    protected override void DeactivateComponent()
+    public override void DeactivateComponent()
     {
         isCarried = false;
         Debug.Log($"{name} — Sceau utilisé ou reposé");
