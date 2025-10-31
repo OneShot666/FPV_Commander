@@ -74,6 +74,7 @@ namespace Weapons {
             Vector3 position = contact.point + contact.normal * 0.001f;         // Slightly offset : avoid z-axis pb
 
             GameObject impact = Instantiate(bulletImpact, position, rotation);
+            impact.name = bulletImpact.name;
             impact.transform.localScale = bulletImpact.transform.localScale;
             impact.transform.Rotate(Vector3.right * -90f);                      // Adjust rotation
             Transform target = contact.otherCollider.transform;

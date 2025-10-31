@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using TMPro;            // Implement TextMeshProUI components to update the healthText
 
 public class HealthBar : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class HealthBar : MonoBehaviour
             return;
         }
 
-        // Initialize the health bar values at the start
+        // Set the initial values of the health bar at the start
         healthSlider.maxValue = playerStats.maxHealth;
         healthSlider.value = playerStats.currentHealth;
         healthText.text = $"{playerStats.currentHealth}/{playerStats.maxHealth}";
@@ -29,7 +29,7 @@ public class HealthBar : MonoBehaviour
     {
         if (playerStats == null) return;
 
-        // Update the slider value and health text in real time
+        // Update the slider and text every frame to match the player's current health
         healthSlider.value = playerStats.currentHealth;
         healthText.text = $"{playerStats.currentHealth}/{playerStats.maxHealth}";
     }

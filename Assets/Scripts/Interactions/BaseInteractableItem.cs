@@ -1,8 +1,6 @@
 using UnityEngine;
-using TMPro;
-// TODO: rendre les items collectibles
-// gérer le glow
-// scène principale
+using TMPro;        // Implement TextMeshProUI components to put specific texts for each items and what it does when we activate/deactivate it
+// TODO: scène principale
 // mettre sur le github de l'école
 [RequireComponent(typeof(Transform))]
 public class BaseInteractableItem : MonoBehaviour
@@ -23,7 +21,7 @@ public class BaseInteractableItem : MonoBehaviour
     public bool IsCollectible => isCollectible;
 
     private MeshRenderer[] meshRenderers;
-    private Material[] originalMaterials; // Stores the original materials
+    public Material[] originalMaterials; // Stores the original materials
     private Material glowMaterial;
     private Transform player;
     private bool isGlowing;
@@ -31,7 +29,7 @@ public class BaseInteractableItem : MonoBehaviour
 
     protected void Start()
     {
-        // Get all MeshRenderers from an object and its children
+        // Get all MeshRenderers from this object and its children
         meshRenderers = GetComponentsInChildren<MeshRenderer>();
         if (meshRenderers.Length == 0)
         {
@@ -46,7 +44,7 @@ public class BaseInteractableItem : MonoBehaviour
             originalMaterials[i] = meshRenderers[i].material;
         }
         
-        // Load the glow material
+        // Load the glow material from the Resources folder
         glowMaterial = Resources.Load<Material>(glowMaterialName);
         if (glowMaterial == null)
         {
@@ -54,11 +52,11 @@ public class BaseInteractableItem : MonoBehaviour
             return;
         }
         
-        // Find the player in the scene with the tag "Player"
+        // Find the player object in the scene with the "Player" tag
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj) player = playerObj.transform;
         
-        // Hide UI texts at the start
+        // Hide both UI texts at the start
         if (inactiveText != null) inactiveText.gameObject.SetActive(false);
         if (activeText != null) activeText.gameObject.SetActive(false);
     }
@@ -67,7 +65,7 @@ public class BaseInteractableItem : MonoBehaviour
     {
         if (!player || glowMaterial == null) return;
         
-        // Calculate the distance between player and an object
+        // Calculate the distance between the player and the object
         float distance = Vector3.Distance(player.position, transform.position);
         bool shouldGlow = distance <= highlightDistance;
         
@@ -86,19 +84,13 @@ public class BaseInteractableItem : MonoBehaviour
     {
         meshRenderers = GetComponentsInChildren<MeshRenderer>(true);
         if (meshRenderers == null || meshRenderers.Length == 0)
-        {
             Debug.LogWarning($"{name} — Aucun MeshRenderer trouvé !");
-            return;
-        }
-
-        originalMaterials = new Material[meshRenderers.Length];
-        for (int i = 0; i < meshRenderers.Length; i++)
-        {
-            if (meshRenderers[i] != null)
-                originalMaterials[i] = meshRenderers[i].material;
-        }
     }
 
+    public void SetMaterials(Material[] materials)
+    {
+        originalMaterials = materials;
+    }
     
     private void HandleTextDisplay(bool isClose)
     {
@@ -110,7 +102,7 @@ public class BaseInteractableItem : MonoBehaviour
             return;
         }
         
-        // Show the correct text based on the state
+        // Show the correct text based on the current active state
         if (isActive)
         {
             if (inactiveText != null) inactiveText.gameObject.SetActive(false);
@@ -131,7 +123,7 @@ public class BaseInteractableItem : MonoBehaviour
         }
     }
     
-    // Set the material glow on all renderers
+    // Apply or remove the glow material on all renderers
     protected void SetGlow(bool state)
     {
         if (meshRenderers == null) return;
@@ -139,8 +131,6 @@ public class BaseInteractableItem : MonoBehaviour
         for (int i = 0; i < meshRenderers.Length; i++)
         {
             meshRenderers[i].material = state ? glowMaterial : originalMaterials[i];
-            if (!state && isEquipped)
-                print($"[MeshRenderer] {meshRenderers[i].name}");
         }
     }
 
@@ -150,8 +140,6 @@ public class BaseInteractableItem : MonoBehaviour
         isEquipped = true;
         isGlowing = false;
         SetGlow(false);
-        
-        print($"[{transform.gameObject.name}] Glow : {isGlowing} Equipped: {isEquipped}]");
     }
 
     public void Switch()

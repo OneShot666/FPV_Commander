@@ -1,7 +1,8 @@
-using JetBrains.Annotations;
+using JetBrains.Annotations; // Allow to use the nullability attributes [CanBeNull] of Rider
 using UnityEngine;
-using Player;
-using TMPro;
+using Player;               // Used to access player related scripts
+using TMPro;                // Implement TextMeshProUI components to indicate the actions in front of items
+using Weapons;             // Used to access weapon related scripts
 
 namespace Interactions {
     public class ItemHandler : MonoBehaviour {
@@ -10,6 +11,7 @@ namespace Interactions {
         [SerializeField, CanBeNull] private Transform hand;                     // Player's hand
         [SerializeField, CanBeNull] private Transform socket;                   // Player's item socket
         [SerializeField] private BaseInteractableItem itemPrefab;               // Equipped item
+        [SerializeField] private GameObject bulletImpactPrefab;
         [SerializeField, CanBeNull] private Canvas canvasUI;                    // UI object
         [SerializeField, CanBeNull] private Transform itemsParent;              // To put items in order
         [SerializeField] private PlayerInputHandler inputHandler;               // InputSystem Script
@@ -27,6 +29,7 @@ namespace Interactions {
 
         void Start() {
             mainCamera = Camera.main;
+            
             if (!itemsParent) {
                 GameObject check = GameObject.Find("Dropped items");
                 itemsParent = check ? check.transform : new GameObject("Dropped items").transform;
@@ -43,17 +46,36 @@ namespace Interactions {
 
         void Update() {
             HandleEquipInput();
-            HandleFireInput();
+            HandleActivateInput();
             HandleDropInput();
             TryPickUpItem();
         }
 
-        private void CollectItem([CanBeNull] BaseInteractableItem item) {                 // Create and position item
+        // Destroy Bullet Impact and bullets from item
+        private BaseInteractableItem CleanItem(BaseInteractableItem item)
+        {
+            foreach (Transform impact in item.GetComponentsInChildren<Transform>(true))
+            {
+                if (impact == item.transform) continue;
+                if (impact.name == bulletImpactPrefab.name || impact.GetComponent<Bullet>())
+                {
+                    print($"{impact.name} Destroyed");
+                    Destroy(impact.gameObject);
+                }
+            }
+            
+            return item;
+        }
+
+        private void CollectItem([CanBeNull] BaseInteractableItem item) {        // Create and position item
             if (!item || !hand) return;
             
-            if (_currentItem) DropItem();                                   // Drop current item if has one
+            if (_currentItem) DropItem();                                       // Drop current item if has one
+            item = CleanItem(item);
+            print($"socket_instance {item.name} has been equipped");
+            // TODO: if shot item is equipped in hand but not in socket, it isn't create ever after
 
-            GameObject instance = Instantiate(item.gameObject, hand);         // Add item in player's hand
+            GameObject instance = Instantiate(item.gameObject, hand);           // Add item in player's hand
             instance.name = item.name;
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);   // Rotate on correct axis
@@ -63,29 +85,32 @@ namespace Interactions {
             Collider col = instance.GetComponent<Collider>();
             if (col) col.enabled = false;
             _currentItem = instance.GetComponent<BaseInteractableItem>();
+            _currentItem = CleanItem(_currentItem);
             _currentItem.gameObject.SetActive(_isEquipped);
-            // _currentItem.SetMeshRenderers();
+            _currentItem.SetMaterials(item.originalMaterials);
             _currentItem.Equip();
             
             if (!socket) return;
 
-            instance = Instantiate(item.gameObject, socket);                  // Add item in player's socket
-            instance.name = item.name;
-            instance.transform.localPosition = Vector3.zero;
-            instance.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);   // Rotate on correct axis
-            instance.transform.localScale = Vector3.one;
-            rb = instance.GetComponent<Rigidbody>();
-            if (rb) Destroy(rb);                                                // Don't affect equipped item by physics
-            col = instance.GetComponent<Collider>();
+            GameObject socket_instance = Instantiate(item.gameObject, socket);                  // Add item in player's socket
+            socket_instance.name = item.name;
+            socket_instance.transform.localPosition = Vector3.zero;
+            socket_instance.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);           // Rotate on correct axis
+            socket_instance.transform.localScale = Vector3.one;
+            rb = socket_instance.GetComponent<Rigidbody>();
+            if (rb) Destroy(rb);                                                               // Don't affect equipped item by physics
+            col = socket_instance.GetComponent<Collider>();
             if (col) col.enabled = false;
-            _socketItem = instance.GetComponent<BaseInteractableItem>();
+            _socketItem = socket_instance.GetComponent<BaseInteractableItem>();
+            _socketItem = CleanItem(_socketItem);
             _socketItem.gameObject.SetActive(!_isEquipped);
+            _socketItem.SetMaterials(item.originalMaterials);
             _socketItem.Equip();
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
         private void DropItem() {
-            if (!_currentItem) return;                                        // No item to drop
+            if (!_currentItem) return;                                              // No item to drop
 
             GameObject dropped = Instantiate(_currentItem.gameObject, itemsParent); // Add copy to main scene
             dropped.name = _currentItem.name;
@@ -93,9 +118,9 @@ namespace Interactions {
             Rigidbody rb = dropped.GetComponent<Rigidbody>();
             if (!rb) rb = dropped.gameObject.AddComponent<Rigidbody>();
             rb.isKinematic = false;
-            rb.useGravity = true;                                               // Apply physics to item
+            rb.useGravity = true;                                                   // Apply physics to item
             if (dropped.TryGetComponent(out Collider col)) col.enabled = true;
-            dropped.gameObject.SetActive(true);                                 // Display object
+            dropped.gameObject.SetActive(true);                                     // Display object
             BaseInteractableItem dropItem = dropped.GetComponent<BaseInteractableItem>();
             dropItem.isEquipped = false;
 
@@ -113,7 +138,6 @@ namespace Interactions {
             _isEquipped = true;
             _currentItem.gameObject.SetActive(_isEquipped);                   // Display item in hand
             if (socket) _socketItem.gameObject.SetActive(!_isEquipped);       // Display item in socket
-            if (playerAnimation) playerAnimation.SetIsArmed(_isEquipped);       // Update animation script
         }
 
         private void UnequipItem() {
@@ -122,7 +146,6 @@ namespace Interactions {
             _isEquipped = false;
             _currentItem.gameObject.SetActive(_isEquipped);
             if (socket) _socketItem.gameObject.SetActive(!_isEquipped);
-            if (playerAnimation) playerAnimation.SetIsArmed(_isEquipped);
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
@@ -154,8 +177,7 @@ namespace Interactions {
                         pickupText.text = $"Use '{item.name}' (E)";
                         pickupText.gameObject.SetActive(true);
                     }
-
-                    // On réutilise la touche "Collect" pour interagir
+                    
                     if (inputHandler.CollectInput)
                     {
                         inputHandler.ResetCollectInput();
@@ -165,19 +187,21 @@ namespace Interactions {
             }
         }
 
+        // Handle the item pickup process
         private void PickUpItem(BaseInteractableItem item) {
             
             if (!item || !item.IsCollectible) return;
             
             CollectItem(item);
             EquipItem();
-            Destroy(item.gameObject);                                         // Remove item on the ground
+            Destroy(item.gameObject);                                        // Remove item on the ground
             if (pickupText) pickupText.gameObject.SetActive(false);
         }
 
+        // Toggle equipped / unequipped state
         private void HandleEquipInput() {
-            if (inputHandler.EquipInput) {
-                inputHandler.ResetEquipInput();                                 // Avoid double activation
+            if (inputHandler.EquipItemInput) {
+                inputHandler.ResetEquipItemInput();                          // Avoid double activation
 
                 _isEquipped = !_isEquipped;
                 if (_isEquipped) EquipItem();
@@ -186,20 +210,23 @@ namespace Interactions {
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        private void HandleFireInput() {
+        // Activate the current equipped item
+        private void HandleActivateInput() {
             if (_isEquipped && inputHandler.FireInput) {
                 inputHandler.ResetFireInput();
                 _currentItem.ActivateComponent();
             }
         }
 
+        // Drop the item when pressing the drop input
         private void HandleDropInput() {
-            if (inputHandler.DropInput) {
-                // inputHandler.ResetDropInput(); !!
+            if (inputHandler.DropItemInput) {
+                inputHandler.ResetDropItemInput();
                 DropItem();
             }
         }
 
+        // Handle pickup input when near an item
         private void HandleCollectInput(BaseInteractableItem item) {
             if (inputHandler.CollectInput) {
                 inputHandler.ResetCollectInput();
