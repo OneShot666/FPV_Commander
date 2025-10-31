@@ -50,15 +50,15 @@ namespace Enemies {
             var playerObj = GameObject.FindGameObjectWithTag("Player");         // Auto-find player
             if (playerObj) _player = playerObj.transform;
 
-            FindTargetInstance();
+            FindTargetInstance();                                               // Check if prioritized target is around
 
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
             _rb.isKinematic = false;
             
-            _currentHealth = maxHealth;
+            _currentHealth = maxHealth;                                         // Start full life
 
-            if (healthBarPrefab) {
+            if (healthBarPrefab) {                                              // Create health bar but hide it
                 GameObject healthBarObj = Instantiate(healthBarPrefab, transform);
                 _healthBar = healthBarObj.GetComponent<HealthBar>();
                 _healthBar.Initialize(transform, maxHealth);
@@ -68,7 +68,7 @@ namespace Enemies {
         }
 
         void FixedUpdate() {
-            if (!_player) return;                                               // Player not found
+            if (!_player) return;                                               // Player not found (shouldn't happen)
 
             DetectTarget();
 
@@ -77,12 +77,12 @@ namespace Enemies {
             if (_currentHealth < maxHealth) DisplayHealthBar();
         }
 
-        private void FindTargetInstance() {
+        private void FindTargetInstance() {                                     // Find prioritize target in scene
             if (prioritizeTargetPrefab) {
                 string prefabName = prioritizeTargetPrefab.name;
 
                 GameObject foundInstance = GameObject.Find(prefabName);         // Try to find by name
-                if (!foundInstance) {                                           // try to find by type
+                if (!foundInstance) {                                           // Try to find by type
                     GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
                     foreach (var obj in allObjects)
                         if (obj.name.Contains(prefabName)) { foundInstance = obj; break; }
@@ -99,7 +99,7 @@ namespace Enemies {
             }
         }
 
-        private void DetectTarget() {
+        private void DetectTarget() {                                           // Check if target/player is around
             _isPlayerDetected = false;
             _currentTarget = null;
 
@@ -118,7 +118,6 @@ namespace Enemies {
             _currentTarget = _player;
         }
 
-        // ReSharper disable Unity.PerformanceAnalysis
         private bool IsTargetInRange() {
             if (!_prioritizeTargetInstance) return false;
 
@@ -151,12 +150,12 @@ namespace Enemies {
             // ReSharper disable once RedundantJumpStatement
             if (_currentTarget != _player) return;
 
-            // PlayerStat script = _player.GetComponent<PlayerStat>();          // ! Uncomment when merged
+            // PlayerStat script = _player.GetComponent<PlayerStat>();          // M Inflict damage to player
             // script.TakeDamage(damage);
-            // ! Add timer between each attack
+            // L Add timer between each attack
         }
 
-        private void DisplayHealthBar() {
+        private void DisplayHealthBar() {                                       // Show health bar above enemy
             if (_healthBar && !_healthBar.gameObject.activeSelf) _healthBar.gameObject.SetActive(true);
         }
 
@@ -164,7 +163,7 @@ namespace Enemies {
             if (!showGizmos) return;
 
             Gizmos.color = _isPlayerDetected ? Color.red : Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRange);
+            Gizmos.DrawWireSphere(transform.position, detectionRange);          // Detection range of enemy
 
             Vector3 leftBoundary = Quaternion.Euler(0, -fieldOfView / 2, 0) * transform.forward; // Field of vision
             Vector3 rightBoundary = Quaternion.Euler(0, fieldOfView / 2, 0) * transform.forward;
@@ -176,12 +175,12 @@ namespace Enemies {
 
         public void TakeDamage(float receiveDamage) {
             _currentHealth -= receiveDamage;
-            _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);         // Limit health between 0 and max hp
             if (_healthBar) _healthBar.SetHealth(_currentHealth);
             if (_currentHealth <= 0) Die();
         }
 
-        private void Die() {
+        private void Die() {                                                    // Disappear after a small time
             Destroy(gameObject, 0.5f);
         }
     }

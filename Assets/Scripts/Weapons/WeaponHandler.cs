@@ -1,7 +1,7 @@
-using JetBrains.Annotations;
-using UnityEngine.UI;
+using JetBrains.Annotations;                                                    // Specific to Rider (for CanBeNull)
+using UnityEngine.UI;                                                           // To handle text on screen
 using UnityEngine;
-using Player;
+using Player;                                                                   // Namespace Player -> player's scripts
 
 namespace Weapons {
     public class WeaponHandler : MonoBehaviour {
@@ -11,15 +11,15 @@ namespace Weapons {
         [SerializeField, CanBeNull] private Transform socket;                   // Player's weapon socket
         [SerializeField] private Weapon weaponPrefab;                           // Equipped weapon
         [SerializeField, CanBeNull] private GameObject crosshairPrefab;         // Sight image for UI
-        [SerializeField, CanBeNull] private Canvas canvasUI;                    // UI object
-        [SerializeField, CanBeNull] private Transform weaponsParent;            // To put weapons in order
+        [SerializeField, CanBeNull] private Canvas canvasUI;                    // UI canvas object
+        [SerializeField, CanBeNull] private Transform weaponsParent;            // To put weapons in order in scene
         [SerializeField] private PlayerInputHandler inputHandler;               // InputSystem Script
         [SerializeField] private PlayerAnimation playerAnimation;               // Player Animation Script
         [SerializeField] private Text pickupText;                               // Text to display when can pick up
 
         [Header("Settings")]
-        [SerializeField, Range(0, 10)] private float collectRange = 8f;
-        [SerializeField, Range(0.5f, 1f)] private float collectRadius = 1f;
+        [SerializeField, Range(0, 10)] private float collectRange = 5f;
+        [SerializeField, Range(0.5f, 1f)] private float collectRadius = 0.8f;
 
         private Camera mainCamera;
         private GameObject _crosshairInstance;
@@ -29,7 +29,7 @@ namespace Weapons {
 
         void Start() {
             mainCamera = Camera.main;
-            if (!weaponsParent) {
+            if (!weaponsParent) {                                               // Auto-create parent for dropped weapons
                 GameObject check = GameObject.Find("Dropped weapons");
                 weaponsParent = check ? check.transform : new GameObject("Dropped weapons").transform;
             }
@@ -51,7 +51,7 @@ namespace Weapons {
             if (pickupText) pickupText.gameObject.SetActive(false);             // Invisible by default
         }
 
-        void Update() {
+        void Update() {                                                         // Handle inputs
             HandleEquipInput();
             HandleFireInput();
             HandleDropInput();
@@ -90,7 +90,7 @@ namespace Weapons {
             _socketWeapon.gameObject.SetActive(!_isEquipped);
         }
 
-        // ReSharper disable Unity.PerformanceAnalysis
+        // ReSharper disable Unity.PerformanceAnalysis -> Specific to Rider (to check if heavry functions are used frequently)
         private void DropWeapon() {
             if (!_currentWeapon) return;                                        // No weapon to drop
 
@@ -106,9 +106,9 @@ namespace Weapons {
 
             UnequipWeapon();
 
-            Destroy(_currentWeapon.gameObject);
-            if (_socketWeapon) Destroy(_socketWeapon.gameObject);
-            _currentWeapon = null;                                              // ? Sure about that (should create a new instance ?)
+            Destroy(_currentWeapon.gameObject);                                 // Remove object in hand
+            if (_socketWeapon) Destroy(_socketWeapon.gameObject);               // and in socket
+            _currentWeapon = null;
             _socketWeapon = null;
         }
 
@@ -122,7 +122,7 @@ namespace Weapons {
             if (playerAnimation) playerAnimation.SetIsArmed(_isEquipped);       // Update animation script
         }
 
-        private void UnequipWeapon() {
+        private void UnequipWeapon() {                                          // Do the opposite of EquipWeapon
             if (!_currentWeapon) return;
 
             _isEquipped = false;
@@ -133,7 +133,7 @@ namespace Weapons {
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        private void TryPickUpWeapon() {                                        // If weapon in sight
+        private void TryPickUpWeapon() {
             if (!mainCamera) return;
 
             if (pickupText) pickupText.gameObject.SetActive(false);
@@ -143,12 +143,12 @@ namespace Weapons {
             if (Physics.CapsuleCast(point1, point2, collectRadius, mainCamera.transform.forward, 
                     out RaycastHit hit, collectRange)) {
                 Weapon weapon = hit.collider.GetComponentInParent<Weapon>();
-                if (weapon && weapon != _currentWeapon) {
-                    if (pickupText) {                                           // Show text
+                if (weapon && weapon != _currentWeapon) {                       // If weapon in sight,
+                    if (pickupText) {                                           // show text
                         pickupText.text = $"Pick up '{weapon.name}' (E)";
                         pickupText.gameObject.SetActive(true);
                     }
-                    HandleCollectInput(weapon);
+                    HandleCollectInput(weapon);                                 // Check if try to pick it up
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace Weapons {
         private void PickUpWeapon(Weapon weapon) {
             CollectWeapon(weapon);
             EquipWeapon();
-            Destroy(weapon.gameObject);                                         // Remove weapon on the ground
+            Destroy(weapon.gameObject);                                         // Remove weapon from the ground
             if (pickupText) pickupText.gameObject.SetActive(false);
         }
 
